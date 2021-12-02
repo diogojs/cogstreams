@@ -1,2 +1,5 @@
 # cogstreams
-Simple server-client application for Cognyte's technical challenge
+
+Simple server-client application for Cognyte's technical challenge.
+
+
