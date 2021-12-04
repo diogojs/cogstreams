@@ -1,7 +1,9 @@
-FROM gcc:latest
+FROM alpine:latest
 
 COPY src /usr/src/cogstreams
 WORKDIR /usr/src/cogstreams
 
-RUN g++ -o cogclient main_client.cpp
-CMD [ "./cogclient" ]
+RUN apk add --no-cache g++ musl cmake make boost boost-dev
+RUN cmake -S . -B build
+RUN cmake --build build
+CMD [ "./build/cogserver -h" ]
