@@ -13,3 +13,10 @@ target_sources(cogserver
         helper.cpp
         helper.hpp
 )
+
+target_compile_options(cogserver
+    PRIVATE
+        -Wall
+        -Wextra
+        -Wpedantic
+)
