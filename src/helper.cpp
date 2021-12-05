@@ -1,24 +1,31 @@
 #include <iostream>
 #include <string>
+#include <boost/program_options.hpp>
 
 #include "helper.hpp"
 
 namespace cogs {
 
 void handle_cli_options(int argc, char const *argv[]) {
-    // Parse command line arguments
-    if (argc == 1) {
-        // Only program/binary name
-        return;
-    }
+    using namespace boost;
 
-    // options: -h, --help
-    auto opt_h = std::string{"-h"};
-    if (opt_h.compare(argv[1]) == 0) {
-        std::cout << "*** Usage ***\n"
-            << "Client: client <port> <message>\n"
-            << "Server: server <port>"
-            << std::endl;
+    try {
+        program_options::options_description description("Allowed options");
+        description.add_options()
+            ("help,h", "Show this help message");
+
+        program_options::variables_map vm;
+        program_options::store(program_options::parse_command_line(argc, argv, description), vm);
+
+        if (vm.count("help")) {
+            std::cout << "*** Usage ***\n"
+                << "Client: cogclient <port> <messages>\n"
+                << "Server: cogserver <port>"
+                << std::endl;
+        }
+
+    } catch (const boost::program_options::unknown_option& exc) {
+        std::cout << "Error parsing command line: " << exc.what() << std::endl;
     }
 }
 
