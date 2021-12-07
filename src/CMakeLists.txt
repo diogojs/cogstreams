@@ -8,6 +8,7 @@ find_package(Boost REQUIRED
     COMPONENTS program_options
 )
 
+# === General === #
 add_executable(cogstreams)
 target_sources(cogstreams
     PRIVATE
@@ -27,10 +28,36 @@ if(Boost_FOUND)
     )
 endif()
 
+# === Client === #
+add_executable(cogclient)
+target_sources(cogclient
+    PRIVATE
+        main_client.cpp
+        helper.cpp
+        helper.hpp
+)
 
-# add_executable(cogclient src/main_client.cpp)
+if(Boost_FOUND)
+    target_include_directories(cogclient
+        PRIVATE
+            ${Boost_INCLUDE_DIRS}
+    )
+    target_link_libraries(cogclient
+        PRIVATE
+            ${Boost_LIBRARIES}
+            pthread
+            boost_system
+    )
+endif()
 
-# === Server ===
+target_compile_options(cogclient
+    PRIVATE
+        -Wall
+        -Wextra
+        -Wpedantic
+)
+
+# === Server === #
 add_executable(cogserver)
 target_sources(cogserver
     PRIVATE
