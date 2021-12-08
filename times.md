@@ -3,3 +3,4 @@
 - Setup VSCode + CMake: 1h
 - Análise dos requisitos e arquitetura do projeto: 1h
 - Desenvolvimento Servidor: 1h
+- Desenvolvimento Cliente: 1h

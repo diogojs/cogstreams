@@ -35,6 +35,8 @@ target_sources(cogclient
         main_client.cpp
         helper.cpp
         helper.hpp
+        client.cpp
+        client.hpp
 )
 
 if(Boost_FOUND)
@@ -64,6 +66,8 @@ target_sources(cogserver
         main_server.cpp
         helper.cpp
         helper.hpp
+        server.cpp
+        server.hpp
 )
 
 if(Boost_FOUND)
@@ -76,6 +80,7 @@ if(Boost_FOUND)
             ${Boost_LIBRARIES}
             pthread
             boost_system
+            boost_filesystem
     )
 endif()
 
