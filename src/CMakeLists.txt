@@ -8,26 +8,6 @@ find_package(Boost REQUIRED
     COMPONENTS program_options
 )
 
-# === General === #
-add_executable(cogstreams)
-target_sources(cogstreams
-    PRIVATE
-        main.cpp
-)
-
-if(Boost_FOUND)
-    target_include_directories(cogstreams
-        PRIVATE
-            ${Boost_INCLUDE_DIRS}
-    )
-    target_link_libraries(cogstreams
-        PRIVATE
-            ${Boost_LIBRARIES}
-            pthread
-            boost_system
-    )
-endif()
-
 # === Client === #
 add_executable(cogclient)
 target_sources(cogclient

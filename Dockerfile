@@ -6,4 +6,7 @@ WORKDIR /usr/src/cogstreams
 RUN apk add --no-cache g++ musl cmake make boost boost-dev
 RUN cmake -S . -B build
 RUN cmake --build build
-CMD [ "./build/cogserver -h" ]
+RUN mkdir app && cd app && cp ../build/cog* ./
+COPY config.cfg /usr/src/cogstreams/app/
+WORKDIR /usr/src/cogstreams/app
+CMD [ "/bin/sh" ]

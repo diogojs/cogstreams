@@ -9,11 +9,11 @@
 namespace cogs {
 using namespace boost;
 
-Client::Client(asio::io_context& io_ctx, int port)
-    : io_ctx_{ io_ctx }, port_{ port }, socket_{ io_ctx }
+Client::Client(asio::io_context& io_ctx, std::string host, int port)
+    : io_ctx_{ io_ctx }, host_{host}, port_{ port }, socket_{ io_ctx }
 {
     asio::ip::tcp::resolver resolver{ io_ctx };
-    asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(std::string{ "localhost" }, std::to_string(port));
+    asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(host, std::to_string(port));
 
     asio::connect(this->socket_, endpoints);
 }

@@ -2,5 +2,6 @@
 - Create Git repository + Setup Docker: 1h
 - Setup VSCode + CMake: 1h
 - Análise dos requisitos e arquitetura do projeto: 1h
-- Desenvolvimento Servidor: 1h
+- Desenvolvimento Servidor: 1h30
 - Desenvolvimento Cliente: 1h
+- Conexão entre os dois containers: 1h

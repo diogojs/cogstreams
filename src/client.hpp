@@ -14,7 +14,7 @@ using namespace boost;
 
 class Client {
 public:
-    Client(asio::io_context& io_ctx, int port);
+    Client(asio::io_context& io_ctx, std::string host, int port);
 
     void send_messages();
 
@@ -24,6 +24,7 @@ public:
 private:
     asio::io_context& io_ctx_;
 
+    std::string host_;
     int port_;
     asio::ip::tcp::socket socket_;
 };

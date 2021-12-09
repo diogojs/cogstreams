@@ -7,15 +7,16 @@
 #include "client.hpp"
 
 int main(int argc, char const* argv[]) {
-    // usage: client <port> <message>
-    cogs::handle_cli_options(argc, argv);
+    using namespace boost::program_options;
+    std::shared_ptr<variables_map> vm = std::make_shared<variables_map>();
+    cogs::handle_cli_options(argc, argv, vm);
 
     try {
-        boost::program_options::variables_map config;
-        cogs::get_configuration(config);
+        cogs::get_configuration(vm);
         boost::asio::io_context io_context;
 
-        cogs::Client client{ io_context, config["port"].as<int>() };
+        auto config = (*vm);
+        cogs::Client client{ io_context, config["host"].as<std::string>(), config["port"].as<int>() };
         client.send_messages();
 
         client.wait_answer();
