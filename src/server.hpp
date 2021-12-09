@@ -5,6 +5,7 @@
 #include <ctime>
 #include <fstream>
 #include <boost/asio.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/program_options.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -21,9 +22,10 @@ class TCPConnection
     : public enable_shared_from_this<TCPConnection>
 {
 public:
+    static unsigned int last_uid;
     static shared_ptr<TCPConnection> create(asio::io_context& io_context, int port, int connection_timeout, int max_file_size, const std::string& filename_prefix)
     {
-        return shared_ptr<TCPConnection>(new TCPConnection(io_context, port, connection_timeout, max_file_size, filename_prefix));
+        return shared_ptr<TCPConnection>(new TCPConnection(TCPConnection::last_uid++, io_context, port, connection_timeout, max_file_size, filename_prefix));
     }
 
     ~TCPConnection();
@@ -36,15 +38,23 @@ public:
     void start();
 
 private:
-    TCPConnection(asio::io_context& io_ctx, int port, int connection_timeout, int max_file_size, const std::string& filename_prefix)
-        : socket_(io_ctx), port_{ port }, connection_timeout_{ connection_timeout }, max_file_size_{ max_file_size }, filename_prefix_{ filename_prefix }
+    TCPConnection(unsigned int uid, asio::io_context& io_ctx, int port, int connection_timeout, int max_file_size, const std::string& filename_prefix)
+        : uid_{uid},
+        socket_(io_ctx),
+        port_{ port },
+        connection_timeout_{ connection_timeout },
+        max_file_size_{ max_file_size },
+        filename_prefix_{ filename_prefix },
+        timer_{io_ctx, asio::chrono::seconds{connection_timeout}}
     {}
 
-
     void async_read();
+    void close_connection(const system::error_code error);
     void handle_read(const system::error_code error, size_t bytes_received);
-    std::string get_filename(bool needs_new_file=false);
+    std::string get_filename(bool needs_new_file = false);
     void write_file(std::string filename, const char* data, size_t bytes_received);
+
+    unsigned int uid_;
 
     asio::ip::tcp::socket socket_;
     int port_;
@@ -52,9 +62,11 @@ private:
     int max_file_size_;
     std::string filename_prefix_;
     char received_buffer_[cogs::max_msg_length];
-    
+    asio::steady_timer timer_;
+
     std::string current_filename;
     std::fstream file;
+
 };
 
 

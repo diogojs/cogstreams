@@ -19,6 +19,7 @@ public:
     void send_messages();
 
     void wait_answer();
+    void check_connection();
 
 private:
     asio::io_context& io_ctx_;

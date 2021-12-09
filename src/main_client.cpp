@@ -18,7 +18,6 @@ int main(int argc, char const* argv[]) {
         cogs::Client client{ io_context, config["port"].as<int>() };
         client.send_messages();
 
-        std::cout << "Waiting for confirmation from server..." << std::endl;
         client.wait_answer();
     }
     catch (std::exception& exc) {

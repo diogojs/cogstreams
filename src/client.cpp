@@ -19,11 +19,13 @@ Client::Client(asio::io_context& io_ctx, int port)
 }
 
 void Client::send_messages() {
-    std::cout << "Enter message (leave it empty to quit): ";
+    std::cout << "Enter message (leave it empty to quit):\n";
     std::string request;
     do {
         getline(std::cin, request);
         auto request_length = request.size();
+        check_connection();
+        if (!this->socket_.is_open()) return;
         std::cout << "Sending " << request_length << " bytes" << std::endl;
         asio::write(this->socket_, asio::buffer(request, request_length));
     } while (request != "");
@@ -32,10 +34,21 @@ void Client::send_messages() {
 }
 
 void Client::wait_answer() {
-    char reply[cogs::max_msg_length];
-    this->socket_.read_some(asio::buffer(reply));
-    std::cout << "Server answer: ";
-    std::cout << reply << std::endl;
+    if (this->socket_.is_open()) {
+        char reply[cogs::max_msg_length] = {0};
+        this->socket_.read_some(asio::buffer(reply));
+        std::cout << "Server answer: ";
+        std::cout << reply << std::endl;
+
+        // For this example project the server only sends data if the connection is closing for some reason
+        this->socket_.close();
+    }
+}
+
+void Client::check_connection() {
+    if (this->socket_.available()) {
+       wait_answer(); 
+    }
 }
 
 } // namespace cogs
